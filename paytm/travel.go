@@ -27,6 +27,7 @@ type Train struct {
 	Src string
 	Dst string
 	Dept string
+	Arri string
 	Avail map[string]Class // seats and fare by class 1A,2A,3A,SL
 	Alt []Alternate
 }
@@ -50,8 +51,10 @@ func parseJson(body string) ([]Train) {
 		s.Src = v.Get("source").String()
 		s.Dst = v.Get("destination").String()
 
-		// s.Dept = strings.TrimRight( strings.Split(v.Get("departure").String(), "T")[1], "\\+00:00")
-		s.Dept = v.Get("departure").String()[11:16]
+		date_d := v.Get("departure").String()
+		s.Dept = date_d[8:10] +"." + date_d[11:16]
+		date_a := v.Get("arrival").String()
+		s.Arri = date_a[8:10] +"." + date_a[11:16]
 
 		v.Get("availability").ForEach(func(_, v1 gjson.Result) bool {
 			var a = new(Class)

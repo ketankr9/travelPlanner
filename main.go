@@ -28,11 +28,16 @@ func printHistory(trainNo string, last string, dest string, src string){
     status := []*runHist.Station{}
     runHist.GetHistory(trainNo, last, &status)
     
+    var can, tot int
     for _, s:= range status {
         if dest == s.Code || src == s.Code {
             printLine(s)
+            can = s.Can
+            tot = s.Can+s.Rht+s.L1hr+s.G1hr
         }
     }
+
+    fmt.Printf("Can:%d/%d", can, tot)
 }
 
 func printClass(class string, t paytm.Train){
@@ -53,18 +58,17 @@ func main(){
 
     data := paytm.Api(*src, *dest, *date)
     for _, t := range data {
-        fmt.Println("\n\n____________________________________________________")
-        fmt.Printf("%s\tDept %s\t%shrs\t*%s*\n", t.No, t.Dept, t.Dura, t.Name)
+        fmt.Println("____________________________________________________")
+        fmt.Printf("%s\t%s (%shrs)  *%s*\n", t.No, t.Dept +" - "+t.Arri, t.Dura, t.Name)
         printClass("2S", t)
         printClass("CC", t)
         printClass("SL", t)
         printClass("3A", t)
-        // fmt.Println()
-        // fmt.Printf("SL(₹%d) %s\t", t.Avail["SL"].Fare, t.Avail["SL"].Seats)
-        // fmt.Printf("3A(₹%d) %s\n", t.Avail["3A"].Fare, t.Avail["3A"].Seats)
-        // fmt.Println("-------------")
-        // fmt.Printf("Code\tRht\t<1hr\t>1hr\tCan\tAvg(hrs)\n")
+        if len(t.Alt) > 0 {
+            fmt.Println("*Alt:", t.Alt)
+        }
         printHistory(t.No, *last, t.Dst, t.Src)
+        fmt.Println()
         fmt.Println()
 	}
 }
