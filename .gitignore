@@ -16,3 +16,4 @@ trainstatus
 # vendor/
 src/
 pkg/
+paytm/sampleSarch.json
