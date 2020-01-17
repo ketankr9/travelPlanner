@@ -14,10 +14,10 @@ export CGO_ENABLED=0
 
 mkdir -p "$RDIR"
 
-for GOARCH in ""amd64 386""; do
-  for GOOS in ""linux windows darwin""; do
-    NAME="${PROJECT_NAME}_${RELEASE_VERSION}_${GOOS}_${GOARCH}"
-    go build -o ${RDIR}/${NAME}
-    echo ${RDIR}/${NAME}
+for goarch in ""amd64 386""; do
+  for goos in ""linux windows darwin""; do
+    NAME="${PROJECT_NAME}_${RELEASE_VERSION}_${goos}_${goarch}"
+    GOOS=${goos} GOARCH=${goarch} go build -o ${RDIR}/${NAME}
+    echo ${NAME}
   done
 done
