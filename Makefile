@@ -3,7 +3,8 @@ bin=trainstatus
 all: clean $(bin)
 
 trainstatus:
-	CGO_ENABLED=0 go build -o $(bin)
+	echo ${CURDIR}
+	GOPATH=${CURDIR} CGO_ENABLED=0 go build -o $(bin)
 
 clean:
 	rm -fv $(bin)
